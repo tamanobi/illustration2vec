@@ -121,13 +121,14 @@ class Illustration2VecBase(object):
 
     def extract_feature(self, images):
         imgs = [self._convert_image(img) for img in images]
-        feature = self._extract(imgs, layername='encode1')
+        feature = self._extract(imgs, layername='conv6_4')
         feature = feature.reshape(feature.shape[0], -1)
         return feature
 
     def extract_binary_feature(self, images):
         imgs = [self._convert_image(img) for img in images]
-        feature = self._extract(imgs, layername='encode1neuron')
+        #feature = self._extract(imgs, layername='encode1neuron')
+        feature = self._extract(imgs, layername='conv6_4')
         feature = feature.reshape(feature.shape[0], -1)
         binary_feature = np.zeros_like(feature, dtype=np.uint8)
         binary_feature[feature > 0.5] = 1

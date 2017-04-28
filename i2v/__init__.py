@@ -1,3 +1,4 @@
+# encoding: utf-8
 from i2v.base import Illustration2VecBase
 
 caffe_available = False
@@ -12,7 +13,11 @@ except ImportError:
 try:
     from i2v.chainer_i2v import ChainerI2V, make_i2v_with_chainer
     chainer_available = True
-except ImportError:
+except ImportError as e:
+    print 'type:' + str(type(e))
+    print 'args:' + str(e.args)
+    print 'message:' + e.message
+    print 'e:' + str(e)
     pass
 
 if not any([caffe_available, chainer_available]):
