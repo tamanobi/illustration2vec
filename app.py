@@ -18,6 +18,15 @@ def i2v():
     preds = illust2vec.estimate_plausible_tags([img], threshold=0.7)
     return jsonify(preds)
 
+@app.route("/feature2", methods=['POST'])
+def i2v_feature2():
+    f = request.files['the_file']
+    fname = './static/images/'+secure_filename(f.filename)
+    f.save(fname)
+    img = Image.open(fname)
+    feature = illust2vec.extract_feature([img])[0]
+    return jsonify({'feature': feature.tolist()})
+
 @app.route("/feature", methods=['POST'])
 def i2v_feature():
     f = request.files['the_file']
