@@ -24,9 +24,11 @@ def i2v_feature2():
     f = request.files['the_file']
     fname = './static/images/'+secure_filename(f.filename)
     f.save(fname)
-    img = Image.open(fname)
-    feature = illust2vec.extract_feature([img])[0]
-    return jsonify({'feature': feature.tolist()})
+    with Image.open(fname) as img:
+        feature = illust2vec.extract_feature([img])[0]
+        os.remove(fname)
+        j = jsonify({'feature': feature.tolist()})
+    return j
 
 @app.route("/feature", methods=['POST'])
 def i2v_feature():
