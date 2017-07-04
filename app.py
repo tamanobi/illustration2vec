@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+import os
 from flask import Flask, url_for, request, jsonify
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -32,9 +33,11 @@ def i2v_feature():
     f = request.files['the_file']
     fname = './static/images/'+secure_filename(f.filename)
     f.save(fname)
-    img = Image.open(fname)
-    feature = illust2vec.extract_binary_feature([img])[0]
-    return jsonify({'feature': feature.tolist()})
+    with Image.open(fname) as img:
+        feature = illust2vec.extract_binary_feature([img])[0]
+        os.remove(fname)
+        j = jsonify({'feature': feature.tolist()})
+    return j
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
