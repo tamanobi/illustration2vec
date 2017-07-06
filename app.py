@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 import os
-import io
+import cStringIO
 from flask import Flask, url_for, request, jsonify
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -27,9 +27,7 @@ def i2v():
 @app.route("/feature2", methods=['POST'])
 def i2v_feature2():
     f = request.files['the_file']
-    #fname = './static/images/'+secure_filename(f.filename)
-    #f.save(fname)
-    with Image.open(f.stream.read()) as img:
+    with Image.open(cStringIO.StringIO(f.stream.read())) as img:
         feature = illust2vec.extract_feature([img])[0]
         j = jsonify({'feature': feature.tolist()})
     return j
