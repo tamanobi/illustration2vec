@@ -8,6 +8,10 @@ import i2v
 
 app = Flask(__name__)
 
+with open('i2v.pid','w') as f:
+    pid = os.getpid()
+    f.write(str(pid)+"\n")
+
 illust2vec = i2v.make_i2v_with_chainer("illust2vec_tag_ver200.caffemodel", "tag_list.json")
 
 @app.route("/i2v", methods=['POST'])
@@ -22,9 +26,9 @@ def i2v():
 @app.route("/feature2", methods=['POST'])
 def i2v_feature2():
     f = request.files['the_file']
-    fname = './static/images/'+secure_filename(f.filename)
-    f.save(fname)
-    with Image.open(fname) as img:
+    #fname = './static/images/'+secure_filename(f.filename)
+    #f.save(fname)
+    with f.read() as img:
         feature = illust2vec.extract_feature([img])[0]
         os.remove(fname)
         j = jsonify({'feature': feature.tolist()})
