@@ -11,6 +11,8 @@ app = Flask(__name__)
 with open('i2v.pid','w') as f:
     pid = os.getpid()
     f.write(str(pid)+"\n")
+    with open('/proc/' + str(pid) + '/oom_adj', 'w') as f2:
+        f2.write("-17\n")
 
 illust2vec = i2v.make_i2v_with_chainer("illust2vec_tag_ver200.caffemodel", "tag_list.json")
 
